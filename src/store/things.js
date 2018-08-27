@@ -3,24 +3,24 @@ import superagent from 'superagent';
 const API_URL = 'https://internets-of-thing-api.herokuapp.com/api/v1/things';
 
 // Actions
-const ADD = 'Thing/ADD';
+// const ADD = 'Thing/ADD';
 const ADD_ALL = 'Thing/ADD_ALL';
 const DELETE = 'Thing/DELETE';
 
 // Reducer
 export default function reducer(state = [], action) {
   switch (action.type) {
-    case ADD:
-      return [
-        ...state,
-        action.payload,
-      ];
+    case 'ADD':
+
+      return [...state,action.payload,];
+
     case ADD_ALL :
 
       return [...state, ...action.payload];
 
-      case DELETE: 
-        return state.filter(category => category.id !== action.payload.id)
+    case DELETE: 
+
+      return state.filter(category => category.id !== action.payload.id)
 
     default: return state;
 
@@ -31,7 +31,7 @@ export default function reducer(state = [], action) {
 export function addThing(thing) {
 
     return {
-      type: ADD,
+      type: 'ADD',
       payload: thing
     }
   }
@@ -46,7 +46,7 @@ export function addThings(things) {
 
 export function deleteOneThing(thing) {
     return{
-        type: DELETE,
+        type: 'DELETE',
         payload: thing,
     }
 }
