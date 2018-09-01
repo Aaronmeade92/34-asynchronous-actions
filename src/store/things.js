@@ -3,25 +3,27 @@ import superagent from 'superagent';
 const API_URL = 'https://internets-of-thing-api.herokuapp.com/api/v1/things';
 
 // Actions
-// const ADD = 'Thing/ADD';
+const ADD = 'Thing/ADD';
 const ADD_ALL = 'Thing/ADD_ALL';
 const DELETE = 'Thing/DELETE';
 
 // Reducer
 export default function reducer(state = [], action) {
   switch (action.type) {
-    case 'ADD':
+    case ADD:
 
-      return [...state,action.payload,];
+      return [ action.payload];
 
     case ADD_ALL :
 
-      return [...state, ...action.payload];
+      console.log(action.payload, 'payload for add all')
+      return [...action.payload];
 
     case DELETE: 
 
-      return state.filter(category => category.id !== action.payload.id)
-
+      console.log(action, 'action')
+      return [...state, ...action]
+      
     default: return state;
 
   }
@@ -31,7 +33,7 @@ export default function reducer(state = [], action) {
 export function addThing(thing) {
 
     return {
-      type: 'ADD',
+      type: ADD,
       payload: thing
     }
   }
@@ -45,8 +47,9 @@ export function addThings(things) {
 }
 
 export function deleteOneThing(thing) {
+    console.log(thing, 'delete one thing');
     return{
-        type: 'DELETE',
+        type: DELETE,
         payload: thing,
     }
 }
@@ -66,7 +69,6 @@ export function fetchThings() {
         
 
       });
-
   };
 }
 
@@ -86,11 +88,18 @@ export function deleteThing(thing) {
     console.log(thing, '!!!')
     return dispatch => {
         superagent.delete(`${API_URL}/${thing}`)
-        .then(response => {
-            return response.text
-        })
-        .then(() => {
-            dispatch(deleteOneThing(thing))
+        .then(function(response){
+            dispatch(deleteOneThing(thing));
+            fetch(API_URL)
+            .then(function(response) {
+              return response.json(); 
+            })
+            .then(function(things) {
+      
+              dispatch(addThings(things));
+              
+      
+            });
         });
     };
 }
